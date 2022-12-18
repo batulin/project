@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TypeOfPlace index{% endblock %}
+
+{% block body %}
+    <h1>TypeOfPlace index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>TypeName</th>
+                <th>TypePrice</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for type_of_place in type_of_places %}
+            <tr>
+                <td>{{ type_of_place.id }}</td>
+                <td>{{ type_of_place.typeName }}</td>
+                <td>{{ type_of_place.typePrice }}</td>
+                <td>
+                    <a href="{{ path('app_type_of_place_show', {'id': type_of_place.id}) }}">show</a>
+                    <a href="{{ path('app_type_of_place_edit', {'id': type_of_place.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

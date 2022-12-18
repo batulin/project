@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TypeOfPlace{% endblock %}
+
+{% block body %}
+    <h1>Create new TypeOfPlace</h1>
+
+    {{ include('type_of_place/_form.html.twig') }}
+
+    <a href="{{ path('app_type_of_place_index') }}">back to list</a>
+{% endblock %}
