@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Rent;
+use App\Model\RentDetails;
 use App\Model\RentModel;
 use App\Exception\SelectedPlacesIsBusyOnThisTimeException;
 use App\Exception\UnCorrectDateForRentException;
@@ -11,6 +12,7 @@ use App\Model\CalendarModel;
 use App\Model\PlaceModel;
 use App\Repository\PlaceRepository;
 use App\Repository\RentRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use DateTimeImmutable;
 use App\Entity\Place;
@@ -133,11 +135,40 @@ class RentService
         return new CalendarModel($items);
     }
 
-//    public function showRent($rentId): RentShowModel
-//    {
-//        $rent = $this->rents->find($rentId);
-//        $rentPrice = $this->getFullPrice($rent);
-//    }
+    public function showRent($rentId): RentDetails
+    {
+        $rent = $this->rents->find($rentId);
+        $rentPrice = $this->getFullPrice($rent);
+        //$rentPayments = $this->getRentPayments($rentId);
+        $rentPayments = $rent->getPayments();
+        $paymentsSoum = $this->getSoumRentPayments($rentPayments);
+        $diff = $rentPrice - $paymentsSoum;
+        if($diff === 0) {
+            $payedStatus = 'payed';
+        }else {
+            if($rent->getEndDate() < new DateTimeImmutable()) {
+                $payedStatus = 'notPayed';
+            }
+            else {
+                $payedStatus = 'current';
+            }
+        }
+
+        return $rentDetails = (new RentDetails())
+            ->setId($rent->getId())
+            ->setBeginDate($rent->getBeginDate())
+            ->setEndDate($rent->getEndDate())
+            ->setDayPrice($rent->getDayPrice())
+            ->setClient($rent->getClient())
+            ->setPlaces($rent->getPlaces())
+            ->setPayments($rentPayments)
+            ->setRentPrice($rentPrice)
+            ->setPaymentsSoum($paymentsSoum)
+            ->setDiff($diff)
+            ->setPayedStatus($payedStatus);
+
+    }
+
     public function getDateInfo($month): array
     {
         $dateString = $month . '-01 00:00:00';
@@ -163,9 +194,19 @@ class RentService
         return $rent->getDayPrice() * $dayCount;
     }
 
-//    public function getRentPayments(Rent $rent): int
-//    {
-//        $dayCount = intval($rent->getBeginDate()->diff($rent->getEndDate())->days + 1);
-//        return $rent->getDayPrice() * $dayCount;
-//    }
+    public function getRentPayments(int $rentId): array
+    {
+        return $rentPayments = $this->payments->getRentPayments($rentId);
+    }
+
+    public function getSoumRentPayments(Collection $rentPayments): int
+    {
+        $soum = 0;
+
+        foreach ($rentPayments as $payment) {
+            $soum += $payment->getSoum();
+        }
+
+        return $soum;
+    }
 }

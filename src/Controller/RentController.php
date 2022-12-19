@@ -68,12 +68,21 @@ class RentController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_rent_show', methods: ['GET'])]
-    public function show(Rent $rent): Response
+    public function show(int $id): Response
     {
+        $rent = $this->rentService->showRent($id);
         return $this->render('rent/show.html.twig', [
             'rent' => $rent,
         ]);
     }
+
+//    #[Route('/{id}', name: 'app_rent_show', methods: ['GET'])]
+//    public function show(Rent $rent): Response
+//    {
+//        return $this->render('rent/show.html.twig', [
+//            'rent' => $rent,
+//        ]);
+//    }
 
     #[Route('/{id}/edit', name: 'app_rent_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Rent $rent, RentRepository $rentRepository): Response

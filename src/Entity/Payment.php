@@ -21,7 +21,7 @@ class Payment
     #[ORM\Column]
     private ?int $soum = null;
 
-    #[ORM\ManyToOne(inversedBy: 'payment')]
+    #[ORM\ManyToOne(inversedBy: 'payments')]
     private ?Rent $rent = null;
 
     public function getId(): ?int
