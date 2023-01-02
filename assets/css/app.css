@@ -53,3 +53,7 @@
 .flex-item a.notPayed {
   background-color: #ff253a;
 }
+
+.navbar-brand img {
+  width: 150px;
+}
