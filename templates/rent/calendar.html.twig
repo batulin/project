@@ -4,10 +4,12 @@
 
 {% block body %}
 
-    <h1>{{ period.0|date('F') }} {{ period.0|date('Y') }}</h1>
 
-    <a href="{{ path('app_calendar', {'month': prevMonth|date('Y-m')}) }}">prev</a>
-    <a href="{{ path('app_calendar', {'month': nextMonth|date('Y-m')}) }}">next</a>
+    <div class="calendar_arrows">
+        <a href="{{ path('app_calendar', {'month': prevMonth|date('Y-m')}) }}" class="arrow prev"><i class="fa-solid fa-angle-left"></i></a>
+        <h1>{{ period.0|date('F') }} {{ period.0|date('Y') }}</h1>
+        <a href="{{ path('app_calendar', {'month': nextMonth|date('Y-m')}) }}" class="arrow next"><i class="fa-solid fa-angle-right"></i></a>
+    </div>
 
     <div class="block_inner">
 
