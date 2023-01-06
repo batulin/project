@@ -24,6 +24,9 @@ class TypeOfPlace
     #[ORM\OneToMany(mappedBy: 'type', targetEntity: Place::class)]
     private Collection $places;
 
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
+
     public function __construct()
     {
         $this->places = new ArrayCollection();
@@ -84,6 +87,18 @@ class TypeOfPlace
                 $place->setType(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }
